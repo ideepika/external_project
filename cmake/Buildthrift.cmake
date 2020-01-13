@@ -1,11 +1,11 @@
 function(build_thrift)
   set(THRIFT_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/thrift")
-  set(THRIFT_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/thrift/install")
-  set(THRIFT_BINARY_DIR "${THRIFT_SOURCE_DIR}/build")
+  set(THRIFT_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/thrift")
+  set(THRIFT_INSTALL_DIR "${THRIFT_ROOT_DIR}/install")
+  set(THRIFT_BINARY_DIR "${THRIFT_ROOT_DIR}/build")
 
   set(THRIFT_CMAKE_ARGS -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
   list(APPEND THRIFT_CMAKE_ARGS -DBUILD_SHARED_LIBS=ON)
-  #  list(APPEND THRIFT_CMAKE_ARGS --DCMAKE_INSTALL_PREFIX=<THRIFT_INSTALL_DIR>)
 
   if(CMAKE_MAKE_PROGRAM MATCHES "make")
     # try to inherit command line arguments passed by parent "make" job
