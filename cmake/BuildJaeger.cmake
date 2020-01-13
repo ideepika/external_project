@@ -39,4 +39,4 @@ function(build_jaeger)
     INSTALL_COMMAND "true"
     DEPENDS OpenTracing thrift #yaml-cpp nlohmann-json
     )
-
+endfunction()
