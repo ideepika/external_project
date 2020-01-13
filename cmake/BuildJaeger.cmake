@@ -2,6 +2,7 @@ function(build_jaeger)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
   set(Jaeger_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/")
   set(Jaeger_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/Jaeger")
+  set(Jaeger_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}/Jaeger")
   set(Jaeger_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/Jaeger/install")
 
   set(Jaeger_CMAKE_ARGS -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
@@ -14,7 +15,6 @@ function(build_jaeger)
   build_opentracing()
   include(Buildthrift)
   build_thrift()
-
   find_package(yaml-cpp REQUIRED)
 
   if(CMAKE_MAKE_PROGRAM MATCHES "make")
@@ -31,15 +31,12 @@ function(build_jaeger)
     UPDATE_COMMAND "" #disables update on each run
     DOWNLOAD_DIR ${CMAKE_SOURCE_DIR}
     SOURCE_DIR ${Jaeger_SOURCE_DIR}
+    PREFIX ${Jaeger_ROOT_DIR}
     CMAKE_ARGS ${Jaeger_CMAKE_ARGS}
     BINARY_DIR ${Jaeger_BINARY_DIR}
     BUILD_COMMAND ${make_cmd}
     BUILD_ALWAYS TRUE
     INSTALL_COMMAND "true"
-    LOG_BUILD TRUE
     DEPENDS OpenTracing thrift #yaml-cpp nlohmann-json
     )
-  ExternalProject_Get_Property(Jaeger SOURCE_DIR)
-  message(STATUS "Source dir of Jaeger is ${SOURCE_DIR}}")
-endfunction()
 
