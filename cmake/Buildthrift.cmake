@@ -1,3 +1,6 @@
+#This module builds thrift
+#HINT: THRIFT_J: integer(default 1)
+
 function(build_thrift)
   set(THRIFT_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/thrift")
   set(THRIFT_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/thrift")
@@ -9,26 +12,20 @@ function(build_thrift)
 
   if(CMAKE_MAKE_PROGRAM MATCHES "make")
     # try to inherit command line arguments passed by parent "make" job
-    set(make_cmd $(MAKE) thrift)
+    set(make_cmd $(MAKE))
   else()
     set(make_cmd ${CMAKE_COMMAND} --build <BINARY_DIR> --target thrift)
   endif()
 
   include(ExternalProject)
-  include(CheckIncludeFileCXX)
   ExternalProject_Add(thrift
-    GIT_REPOSITORY "https://github.com/apache/thrift.git"
-    GIT_TAG "origin/0.11.0"
-    UPDATE_COMMAND "${THRIFT_SOURCE_DIR}/bootstrap.sh &&
-    ${THRIFT_SOURCE_DIR}/configure" #disables update on each run
+    URL http://archive.apache.org/dist/thrift/0.11.0/thrift-0.11.0.tar.gz
     DOWNLOAD_DIR ${CMAKE_SOURCE_DIR}/src
     SOURCE_DIR ${THRIFT_SOURCE_DIR}
-    BINARY_DIR ${THRIFT_BINARY_DIR}
+    CONFIGURE_COMMAND ./bootstrap.sh && ./configure --prefix=<INSTALL_DIR>
     CMAKE_ARGS ${THRIFT_CMAKE_ARGS}
+    BUILD_IN_SOURCE 1
     BUILD_COMMAND ${make_cmd}
-    BUILD_ALWAYS TRUE
-    INSTALL_COMMAND "true"
+    INSTALL_COMMAND make install
     )
-
-  CHECK_INCLUDE_FILE_CXX("thrift/Thrift.h" HAVE_THRIFT)
 endfunction()
